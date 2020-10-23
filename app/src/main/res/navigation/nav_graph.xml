@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph"
+    app:startDestination="@id/authFragment">
+
+    <fragment
+        android:id="@+id/authFragment"
+        android:name="com.fares.training.takenotes.ui.auth.AuthFragment"
+        android:label="AuthFragment" >
+        <action
+            android:id="@+id/action_authFragment_to_notesFragment"
+            app:destination="@id/notesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/notesFragment"
+        android:name="com.fares.training.takenotes.ui.notes.NotesFragment"
+        android:label="NotesFragment" >
+        <action
+            android:id="@+id/action_notesFragment_to_noteDetailsFragment"
+            app:destination="@id/noteDetailsFragment" />
+        <action
+            android:id="@+id/action_notesFragment_to_addEditNote"
+            app:destination="@id/addEditNote" />
+        <action
+            android:id="@+id/action_notesFragment_to_authFragment"
+            app:destination="@id/authFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addEditNote"
+        android:name="com.fares.training.takenotes.ui.add_edit_note.AddEditNoteFragment"
+        android:label="AddEditNote" >
+        <argument android:name="id" />
+    </fragment>
+    <fragment
+        android:id="@+id/noteDetailsFragment"
+        android:name="com.fares.training.takenotes.ui.note_details.NoteDetailsFragment"
+        android:label="NoteDetailsFragment" >
+        <action
+            android:id="@+id/action_noteDetailsFragment_to_addEditNote"
+            app:destination="@id/addEditNote" />
+        <argument
+            android:name="id"
+            app:argType="string" />
+    </fragment>
+</navigation>
