@@ -19,6 +19,12 @@ object Constants {
         const val KEY_LOGGED_PASSWORD = "KEY_LOGGED_PASSWORD"
         const val NO_EMAIL = "NO_EMAIL"
         const val NO_PASSWORD = "NO_PASSWORD"
+        const val KEY_PERMISSION_FIRST_ASKED = "KEY_PERMISSION_FIRST_ASKED"
+    }
+
+    object Permission {
+        const val READ_EXTERNAL_STORAGE = android.Manifest.permission.READ_EXTERNAL_STORAGE
+        const val EXTERNAL_STORAGE_REQUEST_CODE = 400
     }
 
     object Note {

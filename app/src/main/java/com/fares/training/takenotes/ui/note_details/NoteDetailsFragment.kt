@@ -1,6 +1,9 @@
 package com.fares.training.takenotes.ui.note_details
 
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.*
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -11,8 +14,9 @@ import com.fares.training.takenotes.R
 import com.fares.training.takenotes.data.local.Note
 import com.fares.training.takenotes.ui.BaseFragment
 import com.fares.training.takenotes.ui.dialogs.AddOwnerToNoteDialog
+import com.fares.training.takenotes.util.*
 import com.fares.training.takenotes.util.Constants.Dialog.ADD_OWNER_DIALOG_TAG
-import com.fares.training.takenotes.util.Resource
+import com.fares.training.takenotes.util.Constants.Permission.EXTERNAL_STORAGE_REQUEST_CODE
 import dagger.hilt.android.AndroidEntryPoint
 import io.noties.markwon.Markwon
 import kotlinx.android.synthetic.main.fragment_note_details.*
@@ -64,6 +68,14 @@ class NoteDetailsFragment : BaseFragment(R.layout.fragment_note_details) {
             R.id.action_add_owner -> {
                 showAddOwnerDialog()
             }
+            R.id.action_add_image -> {
+                if (!checkExternalStoragePermission()){
+                    handleRequestPermissionsCases {
+                        toast("This Permission needed to pick an image.")
+                    }
+                }
+                pickImage()
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -82,9 +94,9 @@ class NoteDetailsFragment : BaseFragment(R.layout.fragment_note_details) {
                 this.note = note
             } ?: showSnackBar("Note not found")
         }
-        vm.addOwnerStatus.observe(viewLifecycleOwner) {event->
+        vm.addOwnerStatus.observe(viewLifecycleOwner) { event ->
             event?.getContentIfNotHandled()?.let { resource ->
-                when(resource){
+                when (resource) {
                     is Resource.Success -> {
                         addOwnerProgressBar.visibility = GONE
                         showSnackBar(resource.data ?: "Successfully Owner Added")
@@ -112,6 +124,24 @@ class NoteDetailsFragment : BaseFragment(R.layout.fragment_note_details) {
     private fun addOwnerToCurrentNote(email: String) {
         this.note?.let { note ->
             vm.addOwnerToNote(email, note.id)
+        }
+    }
+
+    private fun pickImage() {
+        val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == EXTERNAL_STORAGE_REQUEST_CODE){
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                toast("Permission Granted")
+            } else {
+                requestExternalStoragePermission()
+            }
         }
     }
 }

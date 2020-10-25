@@ -7,4 +7,10 @@
         android:icon="@drawable/ic_add_person"
         android:title="Add Owner"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_add_image"
+        android:icon="@drawable/ic_image"
+        android:title="Add Image"
+        app:showAsAction="always" />
 </menu>
