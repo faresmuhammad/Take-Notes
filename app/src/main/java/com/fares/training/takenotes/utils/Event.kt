@@ -1,4 +1,4 @@
-package com.fares.training.takenotes.util
+package com.fares.training.takenotes.utils
 
 open class Event<out T>(private val content: T) {
 

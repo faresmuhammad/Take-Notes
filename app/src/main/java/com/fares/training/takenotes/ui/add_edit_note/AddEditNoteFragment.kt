@@ -12,11 +12,11 @@ import com.fares.training.takenotes.R
 import com.fares.training.takenotes.data.local.Note
 import com.fares.training.takenotes.ui.BaseFragment
 import com.fares.training.takenotes.ui.dialogs.ColorPickerDialogFragment
-import com.fares.training.takenotes.util.Constants.Dialog.COLOR_FRAGMENT_TAG
-import com.fares.training.takenotes.util.Constants.Note.DEFAULT_NOTE_COLOR
-import com.fares.training.takenotes.util.Constants.Preferences.KEY_LOGGED_EMAIL
-import com.fares.training.takenotes.util.Constants.Preferences.NO_EMAIL
-import com.fares.training.takenotes.util.Resource
+import com.fares.training.takenotes.utils.Constants.Dialog.COLOR_FRAGMENT_TAG
+import com.fares.training.takenotes.utils.Constants.Note.DEFAULT_NOTE_COLOR
+import com.fares.training.takenotes.utils.Constants.Preferences.KEY_LOGGED_EMAIL
+import com.fares.training.takenotes.utils.Constants.Preferences.NO_EMAIL
+import com.fares.training.takenotes.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_add_edit_note.*
 import java.util.*
@@ -79,10 +79,10 @@ class AddEditNoteFragment : BaseFragment(R.layout.fragment_add_edit_note) {
                         changeViewNoteColor(noteData.color)
                     }
                     is Resource.Error<Note> -> {
-                        showSnackBar(result.message ?: "Note not found")
+                        showSnackBar(result.message )
                     }
                     is Resource.Loading<Note> -> {
-                        /* No Operatipn */
+                        /* No Operation */
                     }
                 }
             }

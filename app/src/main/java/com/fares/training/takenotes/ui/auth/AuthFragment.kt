@@ -13,11 +13,11 @@ import androidx.navigation.fragment.findNavController
 import com.fares.training.takenotes.R
 import com.fares.training.takenotes.data.remote.BasicAuthInterceptor
 import com.fares.training.takenotes.ui.BaseFragment
-import com.fares.training.takenotes.util.Constants.Preferences.KEY_LOGGED_EMAIL
-import com.fares.training.takenotes.util.Constants.Preferences.KEY_LOGGED_PASSWORD
-import com.fares.training.takenotes.util.Constants.Preferences.NO_EMAIL
-import com.fares.training.takenotes.util.Constants.Preferences.NO_PASSWORD
-import com.fares.training.takenotes.util.Resource
+import com.fares.training.takenotes.utils.Constants.Preferences.KEY_LOGGED_EMAIL
+import com.fares.training.takenotes.utils.Constants.Preferences.KEY_LOGGED_PASSWORD
+import com.fares.training.takenotes.utils.Constants.Preferences.NO_EMAIL
+import com.fares.training.takenotes.utils.Constants.Preferences.NO_PASSWORD
+import com.fares.training.takenotes.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_auth.*
 import javax.inject.Inject

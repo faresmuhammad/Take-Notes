@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fares.training.takenotes.data.local.Note
 import com.fares.training.takenotes.repository.NoteRepository
-import com.fares.training.takenotes.util.Event
-import com.fares.training.takenotes.util.Resource
+import com.fares.training.takenotes.utils.Event
+import com.fares.training.takenotes.utils.Resource
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 

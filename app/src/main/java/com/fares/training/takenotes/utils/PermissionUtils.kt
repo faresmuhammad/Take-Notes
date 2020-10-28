@@ -1,4 +1,4 @@
-package com.fares.training.takenotes.util
+package com.fares.training.takenotes.utils
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -10,13 +10,10 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
-import com.fares.training.takenotes.util.Constants.Permission.EXTERNAL_STORAGE_REQUEST_CODE
-import com.fares.training.takenotes.util.Constants.Permission.READ_EXTERNAL_STORAGE
-import com.fares.training.takenotes.util.Constants.Preferences.KEY_PERMISSION_FIRST_ASKED
-import javax.inject.Inject
+import com.fares.training.takenotes.utils.Constants.Permission.EXTERNAL_STORAGE_REQUEST_CODE
+import com.fares.training.takenotes.utils.Constants.Permission.READ_EXTERNAL_STORAGE
+import com.fares.training.takenotes.utils.Constants.Preferences.KEY_PERMISSION_FIRST_ASKED
 
-@Inject
-lateinit var pref: SharedPreferences
 
 fun Fragment.checkExternalStoragePermission(): Boolean {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -41,7 +38,7 @@ fun Fragment.requestExternalStoragePermission() {
 
 }
 
-fun Fragment.handleRequestPermissionsCases(explanation: () -> Unit) {
+fun Fragment.handleRequestPermissionsCases(pref: SharedPreferences, explanation: () -> Unit) {
     val requestPermissionRationale =
         requireActivity().shouldShowRequestPermissionRationale(READ_EXTERNAL_STORAGE)
 

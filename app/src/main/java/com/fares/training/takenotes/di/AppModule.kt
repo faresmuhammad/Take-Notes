@@ -8,9 +8,9 @@ import androidx.security.crypto.MasterKey
 import com.fares.training.takenotes.data.local.NoteDatabase
 import com.fares.training.takenotes.data.remote.BasicAuthInterceptor
 import com.fares.training.takenotes.data.remote.NoteApi
-import com.fares.training.takenotes.util.Constants.Database.DATABASE_NAME
-import com.fares.training.takenotes.util.Constants.Network.BASE_URL
-import com.fares.training.takenotes.util.Constants.Preferences.ENCRYPTED_SHARED_PREF_NAME
+import com.fares.training.takenotes.utils.Constants.Database.DATABASE_NAME
+import com.fares.training.takenotes.utils.Constants.Network.BASE_URL
+import com.fares.training.takenotes.utils.Constants.Preferences.ENCRYPTED_SHARED_PREF_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

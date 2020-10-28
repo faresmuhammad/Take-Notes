@@ -1,4 +1,4 @@
-package com.fares.training.takenotes.util
+package com.fares.training.takenotes.utils
 
 import android.content.Context
 import android.net.ConnectivityManager

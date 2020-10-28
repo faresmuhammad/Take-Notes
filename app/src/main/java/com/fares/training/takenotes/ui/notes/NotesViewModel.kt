@@ -4,8 +4,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.fares.training.takenotes.data.local.Note
 import com.fares.training.takenotes.repository.NoteRepository
-import com.fares.training.takenotes.util.Event
-import com.fares.training.takenotes.util.Resource
+import com.fares.training.takenotes.utils.Event
 import kotlinx.coroutines.launch
 
 class NotesViewModel @ViewModelInject constructor(

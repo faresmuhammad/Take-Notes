@@ -1,4 +1,4 @@
-package com.fares.training.takenotes.util
+package com.fares.training.takenotes.utils
 
 object Constants {
 
@@ -35,5 +35,9 @@ object Constants {
     object Dialog {
         const val COLOR_FRAGMENT_TAG = "AddEditNoteFragment"
         const val ADD_OWNER_DIALOG_TAG = "ADD_OWNER_DIALOG_TAG"
+    }
+
+    object Intents {
+        const val PICK_IMAGE_EXTRA = "PICK_IMAGE_EXTRA"
     }
 }

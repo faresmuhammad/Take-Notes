@@ -1,6 +1,6 @@
 package com.fares.training.takenotes.data.remote
 
-import com.fares.training.takenotes.util.Constants.Network.IGNORE_AUTH_URLS
+import com.fares.training.takenotes.utils.Constants.Network.IGNORE_AUTH_URLS
 import okhttp3.Credentials
 import okhttp3.Interceptor
 import okhttp3.Response

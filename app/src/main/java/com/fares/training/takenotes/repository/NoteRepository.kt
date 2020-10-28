@@ -8,9 +8,9 @@ import com.fares.training.takenotes.data.remote.NoteApi
 import com.fares.training.takenotes.data.remote.requests.AccountRequest
 import com.fares.training.takenotes.data.remote.requests.AddOwnerRequest
 import com.fares.training.takenotes.data.remote.requests.DeleteNoteRequest
-import com.fares.training.takenotes.util.Resource
-import com.fares.training.takenotes.util.isInternetActive
-import com.fares.training.takenotes.util.networkBoundResource
+import com.fares.training.takenotes.utils.Resource
+import com.fares.training.takenotes.utils.isInternetActive
+import com.fares.training.takenotes.utils.networkBoundResource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response

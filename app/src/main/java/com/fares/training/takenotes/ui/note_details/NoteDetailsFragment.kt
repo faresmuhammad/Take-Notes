@@ -1,12 +1,12 @@
 package com.fares.training.takenotes.ui.note_details
 
-import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.*
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import androidx.activity.result.launch
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -14,12 +14,13 @@ import com.fares.training.takenotes.R
 import com.fares.training.takenotes.data.local.Note
 import com.fares.training.takenotes.ui.BaseFragment
 import com.fares.training.takenotes.ui.dialogs.AddOwnerToNoteDialog
-import com.fares.training.takenotes.util.*
-import com.fares.training.takenotes.util.Constants.Dialog.ADD_OWNER_DIALOG_TAG
-import com.fares.training.takenotes.util.Constants.Permission.EXTERNAL_STORAGE_REQUEST_CODE
+import com.fares.training.takenotes.utils.*
+import com.fares.training.takenotes.utils.Constants.Dialog.ADD_OWNER_DIALOG_TAG
+import com.fares.training.takenotes.utils.Constants.Permission.EXTERNAL_STORAGE_REQUEST_CODE
 import dagger.hilt.android.AndroidEntryPoint
 import io.noties.markwon.Markwon
 import kotlinx.android.synthetic.main.fragment_note_details.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class NoteDetailsFragment : BaseFragment(R.layout.fragment_note_details) {
@@ -27,6 +28,9 @@ class NoteDetailsFragment : BaseFragment(R.layout.fragment_note_details) {
     private val vm: NoteDetailsViewModel by viewModels()
 
     private val args: NoteDetailsFragmentArgs by navArgs()
+
+    @Inject
+    lateinit var pref:SharedPreferences
 
     private var note: Note? = null
 
@@ -69,12 +73,12 @@ class NoteDetailsFragment : BaseFragment(R.layout.fragment_note_details) {
                 showAddOwnerDialog()
             }
             R.id.action_add_image -> {
-                if (!checkExternalStoragePermission()){
-                    handleRequestPermissionsCases {
+                if (!checkExternalStoragePermission()) {
+                    handleRequestPermissionsCases(pref) {
                         toast("This Permission needed to pick an image.")
                     }
                 }
-                pickImage()
+                pickAnImageContract.launch()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -103,7 +107,7 @@ class NoteDetailsFragment : BaseFragment(R.layout.fragment_note_details) {
                     }
                     is Resource.Error -> {
                         addOwnerProgressBar.visibility = GONE
-                        showSnackBar(resource.message ?: "An unknown error occurred")
+                        showSnackBar(resource.message )
                     }
                     is Resource.Loading -> {
                         addOwnerProgressBar.visibility = VISIBLE
@@ -127,16 +131,17 @@ class NoteDetailsFragment : BaseFragment(R.layout.fragment_note_details) {
         }
     }
 
-    private fun pickImage() {
-        val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+    private val pickAnImageContract = registerForActivityResult(PickAnImageContract()) { uri ->
+        imagePicked.setImageURI(uri)
     }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (requestCode == EXTERNAL_STORAGE_REQUEST_CODE){
+        if (requestCode == EXTERNAL_STORAGE_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 toast("Permission Granted")
             } else {
