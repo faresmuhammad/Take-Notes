@@ -20,6 +20,7 @@ import com.fares.training.takenotes.utils.Constants.Permission.EXTERNAL_STORAGE_
 import dagger.hilt.android.AndroidEntryPoint
 import io.noties.markwon.Markwon
 import kotlinx.android.synthetic.main.fragment_note_details.*
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -30,7 +31,7 @@ class NoteDetailsFragment : BaseFragment(R.layout.fragment_note_details) {
     private val args: NoteDetailsFragmentArgs by navArgs()
 
     @Inject
-    lateinit var pref:SharedPreferences
+    lateinit var pref: SharedPreferences
 
     private var note: Note? = null
 
@@ -96,6 +97,7 @@ class NoteDetailsFragment : BaseFragment(R.layout.fragment_note_details) {
                 tvNoteTitle.text = note.title
                 setMarkdownText(note.content)
                 this.note = note
+                vm.getNotePicture(note.id)
             } ?: showSnackBar("Note not found")
         }
         vm.addOwnerStatus.observe(viewLifecycleOwner) { event ->
@@ -107,11 +109,35 @@ class NoteDetailsFragment : BaseFragment(R.layout.fragment_note_details) {
                     }
                     is Resource.Error -> {
                         addOwnerProgressBar.visibility = GONE
-                        showSnackBar(resource.message )
+                        showSnackBar(resource.message)
                     }
                     is Resource.Loading -> {
                         addOwnerProgressBar.visibility = VISIBLE
                     }
+                }
+            }
+        }
+
+        vm.addPictureStatus.observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is Resource.Success<String> -> {
+                    Timber.d("Success Picture")
+                }
+                is Resource.Error<String> -> {
+
+                }
+                is Resource.Loading -> {
+
+                }
+            }
+        }
+        vm.notePicture.observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is Resource.Success -> {
+                    imagePicked.setImageBitmap(resource.data)
+                }
+                is Resource.Error -> Timber.d("Error Loading")
+                is Resource.Loading -> {
                 }
             }
         }
@@ -132,7 +158,13 @@ class NoteDetailsFragment : BaseFragment(R.layout.fragment_note_details) {
     }
 
     private val pickAnImageContract = registerForActivityResult(PickAnImageContract()) { uri ->
-        imagePicked.setImageURI(uri)
+        requireContext().contentResolver.openInputStream(uri)?.buffered()
+            ?.use { bufferedInputStream ->
+                note?.id?.let { noteId ->
+                    vm.addPictureToNote(noteId, bufferedInputStream.readBytes())
+                }
+            }
+
     }
 
 

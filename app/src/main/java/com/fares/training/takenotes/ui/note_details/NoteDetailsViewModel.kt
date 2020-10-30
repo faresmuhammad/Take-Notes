@@ -1,5 +1,7 @@
 package com.fares.training.takenotes.ui.note_details
 
+import android.graphics.Bitmap
+import android.net.Uri
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,6 +20,11 @@ class NoteDetailsViewModel @ViewModelInject constructor(
     private val _addOwnerStatus = MutableLiveData<Event<Resource<String>>>()
     val addOwnerStatus = _addOwnerStatus
 
+    private val _addPictureStatus = MutableLiveData<Resource<String>>()
+    val addPictureStatus = _addPictureStatus
+
+    private val _notePicture = MutableLiveData<Resource<Bitmap>>()
+    val notePicture = _notePicture
 
     fun addOwnerToNote(ownerEmail: String, noteId: String) {
         _addOwnerStatus.postValue(Event(Resource.Loading(null)))
@@ -28,6 +35,18 @@ class NoteDetailsViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             val result = noteRepository.addOwnerToNote(ownerEmail, noteId)
             _addOwnerStatus.postValue(Event(result))
+        }
+    }
+
+    fun addPictureToNote(noteId: String, picture: ByteArray) = viewModelScope.launch {
+        val result = noteRepository.addPictureToNote(noteId, picture)
+        _addPictureStatus.postValue(result)
+    }
+
+    fun getNotePicture(noteId: String) {
+        viewModelScope.launch {
+            val result = noteRepository.getNotePicture(noteId)
+            _notePicture.postValue(result)
         }
     }
 }

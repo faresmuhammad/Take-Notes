@@ -1,8 +1,10 @@
 package com.fares.training.takenotes.utils
 
 import android.app.Activity
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.activity.result.contract.ActivityResultContract
@@ -14,6 +16,7 @@ class PickAnImageContract : ActivityResultContract<Void, Uri>() {
 
     override fun parseResult(resultCode: Int, intent: Intent?): Uri? {
         val image = intent?.data
+
         return if (image != null && resultCode == Activity.RESULT_OK) image
         else null
     }

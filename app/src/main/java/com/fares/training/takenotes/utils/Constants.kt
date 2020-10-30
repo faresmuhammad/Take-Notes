@@ -6,7 +6,7 @@ object Constants {
 
         val IGNORE_AUTH_URLS = listOf("/register", "/login")
 
-        const val BASE_URL = "https://192.168.1.3:8002"
+        const val BASE_URL = "https://192.168.1.7:8002"
     }
 
     object Database {

@@ -1,16 +1,17 @@
 package com.fares.training.takenotes.repository
 
 import android.app.Application
+import android.net.Uri
+import androidx.core.net.toUri
 import com.fares.training.takenotes.data.local.LocallyDeletedNoteId
 import com.fares.training.takenotes.data.local.Note
 import com.fares.training.takenotes.data.local.NoteDao
 import com.fares.training.takenotes.data.remote.NoteApi
-import com.fares.training.takenotes.data.remote.requests.AccountRequest
-import com.fares.training.takenotes.data.remote.requests.AddOwnerRequest
-import com.fares.training.takenotes.data.remote.requests.DeleteNoteRequest
+import com.fares.training.takenotes.data.remote.requests.*
 import com.fares.training.takenotes.utils.Resource
 import com.fares.training.takenotes.utils.isInternetActive
 import com.fares.training.takenotes.utils.networkBoundResource
+import com.fares.training.takenotes.utils.toBitmap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
@@ -144,6 +145,33 @@ class NoteRepository @Inject constructor(
             isInternetActive(context)
         }
     )
+
+    suspend fun addPictureToNote(noteId: String, picture: ByteArray) = withContext(Dispatchers.IO) {
+        val response = noteApi.addPictureToNote(AddPictureRequest(noteId, picture))
+        try {
+            if (response.isSuccessful && response.body()?.isSuccessful!!) {
+                Resource.Success(response.body()?.message)
+            } else {
+                Resource.Error(response.body()?.message ?: response.message(), null)
+            }
+        } catch (e: Exception) {
+            Resource.Error("Couldn't connect to the servers. Check your internet connection", null)
+        }
+    }
+
+    suspend fun getNotePicture(noteId: String)  =
+        withContext(Dispatchers.IO) {
+            val response = noteApi.getNotePicture(noteId)
+            try {
+                if (response.isSuccessful && response.body()?.isSuccessful!!) {
+                    Resource.Success(response.body()?.picture?.toBitmap())
+                } else {
+                    Resource.Error("Error", null)
+                }
+            } catch (e: Exception) {
+                Resource.Error("Error", null)
+            }
+        }
 
 
 }
