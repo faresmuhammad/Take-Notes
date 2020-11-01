@@ -4,5 +4,5 @@ import java.net.URI
 
 data class AddPictureRequest(
     val noteId: String,
-    val picture: ByteArray
+    val picture: String?
 )

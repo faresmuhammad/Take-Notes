@@ -1,9 +1,10 @@
 package com.fares.training.takenotes.data.local
 
-import android.net.Uri
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 import java.util.*
 
 @Entity(tableName = "notes")
@@ -17,5 +18,5 @@ data class Note(
     var isSynced: Boolean = false,
     @PrimaryKey(autoGenerate = false)
     val id: String = UUID.randomUUID().toString(),
-    var picture: ByteArray? = null
+    val pictures: List<String>? = null
 )

@@ -8,10 +8,7 @@ import com.fares.training.takenotes.data.local.Note
 import com.fares.training.takenotes.data.local.NoteDao
 import com.fares.training.takenotes.data.remote.NoteApi
 import com.fares.training.takenotes.data.remote.requests.*
-import com.fares.training.takenotes.utils.Resource
-import com.fares.training.takenotes.utils.isInternetActive
-import com.fares.training.takenotes.utils.networkBoundResource
-import com.fares.training.takenotes.utils.toBitmap
+import com.fares.training.takenotes.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
@@ -146,7 +143,7 @@ class NoteRepository @Inject constructor(
         }
     )
 
-    suspend fun addPictureToNote(noteId: String, picture: ByteArray) = withContext(Dispatchers.IO) {
+    suspend fun addPictureToNote(noteId: String, picture: String) = withContext(Dispatchers.IO) {
         val response = noteApi.addPictureToNote(AddPictureRequest(noteId, picture))
         try {
             if (response.isSuccessful && response.body()?.isSuccessful!!) {
@@ -159,12 +156,12 @@ class NoteRepository @Inject constructor(
         }
     }
 
-    suspend fun getNotePicture(noteId: String)  =
+    suspend fun getNotePictures(noteId: String)  =
         withContext(Dispatchers.IO) {
             val response = noteApi.getNotePicture(noteId)
             try {
                 if (response.isSuccessful && response.body()?.isSuccessful!!) {
-                    Resource.Success(response.body()?.picture?.toBitmap())
+                    Resource.Success(response.body()?.pictures?.map { it.toByteArray().toBitmap() })
                 } else {
                     Resource.Error("Error", null)
                 }

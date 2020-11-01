@@ -1,12 +1,17 @@
 package com.fares.training.takenotes.ui.note_details
 
+import android.app.Activity
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.util.Base64
 import android.view.*
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import androidx.activity.result.launch
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -79,7 +84,12 @@ class NoteDetailsFragment : BaseFragment(R.layout.fragment_note_details) {
                         toast("This Permission needed to pick an image.")
                     }
                 }
-                pickAnImageContract.launch()
+                pickMultipleImages.launch(
+                    Intent.createChooser(
+                        multipleImagesIntent,
+                        "Select Picture"
+                    )
+                )
             }
         }
         return super.onOptionsItemSelected(item)
@@ -122,6 +132,7 @@ class NoteDetailsFragment : BaseFragment(R.layout.fragment_note_details) {
             when (resource) {
                 is Resource.Success<String> -> {
                     Timber.d("Success Picture")
+                    vm.getNotePicture(note?.id!!)
                 }
                 is Resource.Error<String> -> {
 
@@ -134,7 +145,7 @@ class NoteDetailsFragment : BaseFragment(R.layout.fragment_note_details) {
         vm.notePicture.observe(viewLifecycleOwner) { resource ->
             when (resource) {
                 is Resource.Success -> {
-                    imagePicked.setImageBitmap(resource.data)
+                    imagePicked.setImageBitmap(resource.data?.get(1))
                 }
                 is Resource.Error -> Timber.d("Error Loading")
                 is Resource.Loading -> {
@@ -157,16 +168,56 @@ class NoteDetailsFragment : BaseFragment(R.layout.fragment_note_details) {
         }
     }
 
-    private val pickAnImageContract = registerForActivityResult(PickAnImageContract()) { uri ->
-        requireContext().contentResolver.openInputStream(uri)?.buffered()
-            ?.use { bufferedInputStream ->
-                note?.id?.let { noteId ->
-                    vm.addPictureToNote(noteId, bufferedInputStream.readBytes())
-                }
+
+    /*private val pickMultipleImages =
+        registerForActivityResult(PickMultipleImagesContract()) { selectedImages ->
+            val images = mutableListOf<ByteArray>()
+            for (image in selectedImages){
+                images.add(image.toByteArray(requireContext())!!)
+            }
+            vm.addPictureToNote(note?.id!!,images)
+        }*/
+    private val pickMultipleImages =
+        registerForActivityResult(StartActivityForResult()) { result ->
+            Timber.d("Selected Images Count: ${getSelectedImages(result).size}")
+            for (image in getSelectedImages(result)) {
+                val encodedImage = image.toByteArray(requireContext())!!.toBase64String()
+                Timber.d("Encoded Image: $encodedImage")
+                vm.addPictureToNote(
+                    note?.id!!,
+                    encodedImage
+                )
             }
 
+        }
+
+    private fun getSelectedImages(activityResult: ActivityResult): List<Uri> {
+        val imagesSelected = mutableListOf<Uri>()
+        val intent = activityResult.data
+        val clipData = intent?.clipData
+
+        clipData?.let { clip ->
+            if (activityResult.resultCode == Activity.RESULT_OK) {
+                for (i in 0 until clip.itemCount) {
+                    val imageUri = clip.getItemAt(i).uri
+                    Timber.d("Image Uri: $imageUri")
+                    imagesSelected.add(imageUri)
+                }
+            }
+        }
+        if (clipData == null && activityResult.resultCode == Activity.RESULT_OK) {
+            val imageUri = intent?.data
+            imagesSelected.add(imageUri!!)
+        }
+
+
+        return imagesSelected
     }
 
+    private val multipleImagesIntent = Intent(Intent.ACTION_GET_CONTENT).apply {
+        putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        type = "image/*"
+    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
