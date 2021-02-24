@@ -2,17 +2,14 @@ package com.fares.training.takenotes.ui.custom_views
 
 import android.content.Context
 import android.graphics.Color
+import android.net.Uri
 import android.util.AttributeSet
 import android.view.Gravity
-import android.view.View.MeasureSpec.*
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
 import android.widget.ImageView
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.view.*
 import com.fares.folderview.ImageItem
 import com.fares.folderview.Shape
-import com.fares.training.takenotes.R
 import timber.log.Timber
 
 class MultiImagesView @JvmOverloads constructor(
@@ -21,7 +18,7 @@ class MultiImagesView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val radius = 16f
+    private val radius = 64f
 
 
     private val topLeftItem: ImageItem by lazy {
@@ -45,7 +42,8 @@ class MultiImagesView @JvmOverloads constructor(
         }
     }
 
-    private var spaceBetween = 25
+    private val imagesList = mutableListOf<Uri>()
+    private var spaceBetween = 5
     var desiredSize = 400
     private var childWidth: Int
     private var childHeight: Int
@@ -156,4 +154,28 @@ class MultiImagesView @JvmOverloads constructor(
 
     }
 
+
+    fun addImage(imageUri: Uri) {
+        imagesList.add(imageUri)
+        setImages()
+    }
+
+    private fun setImages() = when (imagesList.size) {
+        1 -> topLeftItem.setImageURI(imagesList[0])
+        2 -> {
+            topLeftItem.setImageURI(imagesList[0])
+            topRightItem.setImageURI(imagesList[1])
+        }
+        3 -> {
+            topLeftItem.setImageURI(imagesList[0])
+            topRightItem.setImageURI(imagesList[1])
+            bottomLeftItem.setImageURI(imagesList[2])
+        }
+        else -> {
+            topLeftItem.setImageURI(imagesList[0])
+            topRightItem.setImageURI(imagesList[1])
+            bottomLeftItem.setImageURI(imagesList[2])
+            bottomRightItem.setImageURI(imagesList[3])
+        }
+    }
 }

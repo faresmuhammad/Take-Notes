@@ -187,6 +187,7 @@ class NoteDetailsFragment : BaseFragment(R.layout.fragment_note_details) {
                     note?.id!!,
                     encodedImage
                 )
+                noteImages.addImage(image)
             }
 
         }
